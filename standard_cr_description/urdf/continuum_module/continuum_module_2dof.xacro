@@ -1,0 +1,178 @@
+<?xml version="3.1"?>
+<!--  两（弯曲）自由度连续体模块的xacro文件 -->
+<!-- 根据伪刚体假设把圆弧等效为n个串联的连杆，连杆间的相对角度相等，各连杆长度为L/n -->
+<!-- 在此文件中，n=10 -->
+<!-- 割线版本 -->
+
+<robot name="continuum_module_2dof" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="cm_2dof" params="prefix
+    TotalLength
+    Num_linkages:= 10
+    Diameter:= 0.08
+    isMimic:= true"
+    >
+
+        <!-- 结构参数 -->
+        <xacro:property name="Radius_linkages" value="${Diameter/2}"/>
+
+        <!-- 约束参数 -->
+        <xacro:property name="ConfigurationAngle_Max" value="${PI/2}"/> 
+
+        <xacro:property name="Collision_Ratio" value="0.6"/> 
+
+        <!-- 地面的固定 -->
+        <link name="${prefix}_base">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0" radius="0.00"/>
+                </geometry>
+                <material name="color_base" />
+            </visual>
+        </link>
+        <joint name="${prefix}_q0_x" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 0" />        
+            <parent link="${prefix}_base"/>
+            <child link="${prefix}_base_virtual" />
+            <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages/2}" upper="${ConfigurationAngle_Max/Num_linkages/2}" velocity="0.5"/>
+            <axis xyz="1 0 0"/>
+        </joint>        
+        <link name="${prefix}_base_virtual">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0" radius="0"/>
+                </geometry>
+                <material name="color_base" />
+            </visual>
+        </link>
+        <joint name="${prefix}_q0_y" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 0" />        
+            <parent link="${prefix}_base_virtual"/>
+            <child link="${prefix}_link1" />
+            <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages/2}" upper="${ConfigurationAngle_Max/Num_linkages/2}" velocity="0.5"/>
+            <axis xyz="0 1 0"/>
+        </joint>      
+
+
+        <!-- 递归生成link1-linkN-1 -->
+        <xacro:macro name="generate_links" params="link_number:=1">
+            <!-- Base case: stop recursion when link_number is greater than or equal to 5 -->
+            <xacro:if value="${link_number != Num_linkages}">
+
+                <link name="${prefix}_link${link_number}">
+                    <visual>
+                        <origin xyz="0 0 ${TotalLength/Num_linkages/2}" rpy="0 0 0"/>
+                        <geometry>
+                            <cylinder length="${TotalLength/Num_linkages}" radius="${Radius_linkages}"/>
+                        </geometry>
+                        <material name="color_linkages" />
+                    </visual>
+                    <collision>
+                        <origin xyz="0 0 ${TotalLength/Num_linkages/2}" rpy="0 0 0"/>
+                        <geometry>
+                            <cylinder length="${TotalLength/Num_linkages*Collision_Ratio}" radius="${Radius_linkages}"/>
+                        </geometry>
+                        <material name="color_linkages" />
+                    </collision>
+                </link>
+                <joint name="${prefix}_q${link_number}_x" type="revolute">
+                    <origin xyz="0 0 ${TotalLength/Num_linkages}" rpy="0 0 0" />        
+                    <parent link="${prefix}_link${link_number}"/>
+                    <child link="${prefix}_link${link_number}_virtual" />
+                    <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages}" upper="${ConfigurationAngle_Max/Num_linkages}" velocity="0.5"/>
+                    <axis xyz="1 0 0"/>
+                    <xacro:if value="${isMimic}">
+                        <mimic joint="${prefix}_q0_x" multiplier="2" offset="0"/>
+                    </xacro:if>                    
+                </joint>
+                <link name="${prefix}_link${link_number}_virtual">
+                    <visual>
+                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        <geometry>
+                            <cylinder length="0" radius="0"/>
+                        </geometry>
+                        <material name="color_linkages" />
+                    </visual>
+                </link>
+                <joint name="${prefix}_q${link_number}_y" type="revolute">
+                    <origin xyz="0 0 0" rpy="0 0 0" />        
+                    <parent link="${prefix}_link${link_number}_virtual"/>
+                    <child link="${prefix}_link${link_number + 1}" />
+                    <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages}" upper="${ConfigurationAngle_Max/Num_linkages}" velocity="0.5"/>
+                    <axis xyz="0 1 0"/>
+                    <xacro:if value="${isMimic}">
+                        <mimic joint="${prefix}_q0_y" multiplier="2" offset="0"/>
+                    </xacro:if>   
+                </joint>
+
+                <!-- Recursively generate the next link -->
+                <xacro:generate_links link_number="${link_number + 1}" />
+            </xacro:if>
+        </xacro:macro>
+
+        <xacro:generate_links />
+
+
+        <!-- link-N和最后一个关节 -->
+        <link name="${prefix}_link${Num_linkages}">
+            <visual>
+                <origin xyz="0 0 ${TotalLength/Num_linkages/2}" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${TotalLength/Num_linkages}" radius="${Radius_linkages}"/>
+                </geometry>
+                <material name="color_linkages" />
+            </visual>
+            <collision>
+                <origin xyz="0 0 ${TotalLength/Num_linkages/2}" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="${TotalLength/Num_linkages*Collision_Ratio}" radius="${Radius_linkages}"/>
+                </geometry>
+                <material name="color_linkages" />
+            </collision>
+        </link>
+        <joint name="${prefix}_q${Num_linkages}_x" type="revolute">
+            <origin xyz="0 0 ${TotalLength/Num_linkages}" rpy="0 0 0" />        
+            <parent link="${prefix}_link${Num_linkages}"/>
+            <child link="${prefix}_link${Num_linkages}_virtual" />
+            <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages/2}" upper="${ConfigurationAngle_Max/Num_linkages/2}" velocity="0.5"/>
+            <axis xyz="1 0 0"/>
+            <xacro:if value="${isMimic}">
+                <mimic joint="${prefix}_q0_x" multiplier="1" offset="0"/>
+            </xacro:if>   
+        </joint>
+        <link name="${prefix}_link${Num_linkages}_virtual">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0" radius="0"/>
+                </geometry>
+                <material name="color_linkages" />
+            </visual>
+        </link>
+        <joint name="${prefix}_q${Num_linkages}_y" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 0" />        
+            <parent link="${prefix}_link${Num_linkages}_virtual"/>
+            <child link="${prefix}_link_end" />
+            <limit effort="1000.0" lower="${-ConfigurationAngle_Max/Num_linkages/2}" upper="${ConfigurationAngle_Max/Num_linkages/2}" velocity="0.5"/>
+            <axis xyz="0 1 0"/>
+            <xacro:if value="${isMimic}">
+                <mimic joint="${prefix}_q0_y" multiplier="1" offset="0"/>
+            </xacro:if>   
+        </joint>
+
+        <!-- 生成link_end -->
+        <link name="${prefix}_link_end">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0" radius="0"/>
+                </geometry>
+                <material name="color_linkages" />
+            </visual>
+        </link>
+
+    </xacro:macro>
+
+</robot>

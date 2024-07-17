@@ -1,0 +1,42 @@
+# 单位采用国际单位制 m
+
+structure_parameters:
+  cm:
+    prefix: "cm"
+    length: 0.32
+    diameter: 0.07
+    num_linkages: 10
+
+motor_config:
+  q1:
+    CAN_ID: 1
+    ratio: 1 # 电机/关节角的比例，用于计算关节角度，下同
+
+  q2:
+    CAN_ID: 2
+    ratio: 1
+
+  q3:
+    CAN_ID: 3
+    ratio: 1
+
+  cm_q0_x:
+    CAN_ID: 4
+    offset: 0
+    Drive_wheel_diameter: 0.046
+    Driving_wire_distribution_diameter: 0.070
+    # Driving_wire_distribution_diameter: 0.056
+
+  cm_q0_y:
+    CAN_ID: 5
+    offset: 0
+    Drive_wheel_diameter: 0.046
+    Driving_wire_distribution_diameter: 0.070
+    # Driving_wire_distribution_diameter: 0.056
+
+  q6:
+    CAN_ID: 6
+    ratio: 1
+    
+
+

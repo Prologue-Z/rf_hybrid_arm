@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="rf_hybrid_arm_transmissions" params="hw_interface">
+
+        <!-- 导入数据config -->
+        <xacro:property name="arm_config_file" value="$(find standard_cr_description)/config/rf_hybrid_arm_config.yaml" />
+        <xacro:property name="arm_props" value="${xacro.load_yaml(arm_config_file)}"/>
+
+        <xacro:property name="q1_ratio" value="${arm_props['motor_config']['q1']['ratio']}"/>
+        <xacro:property name="q2_ratio" value="${arm_props['motor_config']['q2']['ratio']}"/>
+        <xacro:property name="q3_ratio" value="${arm_props['motor_config']['q3']['ratio']}"/>
+        <xacro:property name="q6_ratio" value="${arm_props['motor_config']['q6']['ratio']}"/>
+
+        <xacro:property name="cm_num_linkages" value="${arm_props['structure_parameters']['cm']['num_linkages']}"/>
+    
+        <xacro:property name="cm_x_wheel_d" value="${arm_props['motor_config']['cm_q0_x']['Drive_wheel_diameter']}"/>
+        <xacro:property name="cm_x_wire_d" value="${arm_props['motor_config']['cm_q0_x']['Driving_wire_distribution_diameter']}"/>
+        <xacro:property name="cm_x_ratio" value="${2*cm_x_wire_d*cm_num_linkages/cm_x_wheel_d}"/>
+
+        <xacro:property name="cm_y_wheel_d" value="${arm_props['motor_config']['cm_q0_y']['Drive_wheel_diameter']}"/>
+        <xacro:property name="cm_y_wire_d" value="${arm_props['motor_config']['cm_q0_y']['Driving_wire_distribution_diameter']}"/>
+        <xacro:property name="cm_y_ratio" value="${2*cm_y_wire_d*cm_num_linkages/cm_y_wheel_d}"/>
+
+        <transmission name="q1_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="q1">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor1">
+                <mechanicalReduction>${q1_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+        <transmission name="q2_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="q2">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor2">
+                <mechanicalReduction>${q2_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+        <transmission name="q3_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="q3">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor3">
+                <mechanicalReduction>${q3_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+        <transmission name="cm_x_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="cm_q0_x">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor4">
+                <mechanicalReduction>${cm_x_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+        <transmission name="cm_y_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="cm_q0_y">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor5">
+                <mechanicalReduction>${cm_y_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+        <transmission name="q6_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="q6">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="motor6">
+                <mechanicalReduction>${q6_ratio}</mechanicalReduction>
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </actuator>
+        </transmission>
+
+    </xacro:macro>
+</robot>

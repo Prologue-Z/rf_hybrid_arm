@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="rigid_arm_3dof">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-5.4434E-06 -1.6107E-05 0.070835"
+        rpy="0 0 0" />
+      <mass
+        value="0.36812" />
+      <inertia
+        ixx="0.00039637"
+        ixy="4.0719E-08"
+        ixz="5.8242E-08"
+        iyy="0.00039828"
+        iyz="-4.7521E-08"
+        izz="0.00035015" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.92157 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="rigid2_link">
+    <inertial>
+      <origin
+        xyz="0.056536 -0.00014668 0.13062"
+        rpy="0 0 0" />
+      <mass
+        value="0.33473" />
+      <inertia
+        ixx="0.00026259"
+        ixy="-7.6647E-08"
+        ixz="-1.9418E-05"
+        iyy="0.00021199"
+        iyz="2.1531E-07"
+        izz="0.00021004" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="q1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.1225"
+      rpy="0 0 1.570796" />
+    <parent
+      link="base_link" />
+    <child
+      link="rigid2_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="rigid3_link">
+    <inertial>
+      <origin
+        xyz="0.047251 -0.00012239 0.17802"
+        rpy="0 0 0" />
+      <mass
+        value="0.38739" />
+      <inertia
+        ixx="0.00038968"
+        ixy="-8.78E-08"
+        ixz="-1.5284E-05"
+        iyy="0.00033465"
+        iyz="2.0369E-07"
+        izz="0.00025731" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid3_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid3_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="q2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.16"
+      rpy="0 0 0" />
+    <parent
+      link="rigid2_link" />
+    <child
+      link="rigid3_link" />
+    <axis
+      xyz="-1 0.0026917 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="1" />
+  </joint>
+  <link
+    name="rigid4_link">
+    <inertial>
+      <origin
+        xyz="-0.0033885 -0.018502 0.068114"
+        rpy="0 0 0" />
+      <mass
+        value="0.18568" />
+      <inertia
+        ixx="0.00019735"
+        ixy="-3.365E-08"
+        ixz="4.1629E-06"
+        iyy="0.00018459"
+        iyz="1.0769E-05"
+        izz="0.00019464" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid4_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://rigid_arm_3dof/meshes/rigid4_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="q3"
+    type="revolute">
+    <origin
+      xyz="0 0 0.24"
+      rpy="0 0 0" />
+    <parent
+      link="rigid3_link" />
+    <child
+      link="rigid4_link" />
+    <axis
+      xyz="-1 0.0026917 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="1" />
+  </joint>
+</robot>
